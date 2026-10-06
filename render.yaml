@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: vetagenda
+    runtime: image
+    plan: free
+    region: oregon
+
+    image:
+      url: docker.io/simonvf10/vetagenda
+      tag: latest
+
+    healthCheckPath: /
