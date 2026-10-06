@@ -31,7 +31,8 @@ jobs:
         run: flake8 app tests
 
       - name: Ejecutar pruebas
-        run: pytest -q
+        run: |
+          PYTHONPATH=. pytest -q
 
       - name: Construir imagen Docker
         run: docker build -t vetagenda:${{ github.sha }} .
