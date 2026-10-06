@@ -1,1 +1,1 @@
-
+"""Paquete principal de VetAgenda."""
