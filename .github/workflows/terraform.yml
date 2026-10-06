@@ -1,0 +1,37 @@
+name: Terraform VetAgenda
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: terraform
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: terraform
+        env:
+          TF_VAR_render_api_key: ${{ secrets.RENDER_API_KEY }}
+          TF_VAR_image_tag: ${{ github.sha }}
+        run: terraform plan
+
+      - name: Terraform Apply
+        working-directory: terraform
+        env:
+          TF_VAR_render_api_key: ${{ secrets.RENDER_API_KEY }}
+          TF_VAR_image_tag: ${{ github.sha }}
+        run: terraform apply -auto-approve
