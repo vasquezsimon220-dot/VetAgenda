@@ -41,7 +41,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Construir imagen Docker
-        run: docker build -t simonvf10/vetagenda:${{ github.sha }} .
+        run: |
+          docker build \
+          -t simonvf10/vetagenda:${{ github.sha }} \
+          -t simonvf10/vetagenda:latest .
 
       - name: Publicar imagen Docker
-        run: docker push simonvf10/vetagenda:${{ github.sha }}
+        run: |
+          docker push simonvf10/vetagenda:${{ github.sha }}
+          docker push simonvf10/vetagenda:latest
