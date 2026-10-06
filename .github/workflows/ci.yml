@@ -34,5 +34,14 @@ jobs:
         run: |
           PYTHONPATH=. pytest -q
 
+      - name: Iniciar sesión en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Construir imagen Docker
-        run: docker build -t vetagenda:${{ github.sha }} .
+        run: docker build -t simonvf10/vetagenda:${{ github.sha }} .
+
+      - name: Publicar imagen Docker
+        run: docker push simonvf10/vetagenda:${{ github.sha }}
