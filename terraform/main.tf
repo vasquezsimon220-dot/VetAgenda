@@ -1,7 +1,8 @@
 terraform {
   required_providers {
     render = {
-      source = "render-oss/render"
+      source  = "render-oss/render"
+      version = "1.9.1"
     }
   }
 }
@@ -12,12 +13,13 @@ provider "render" {
 
 resource "render_web_service" "vetagenda" {
   name   = "vetagenda"
-  plan   = "free"
+  plan   = "starter"
   region = "oregon"
 
   runtime_source = {
     image = {
-      url = "docker.io/simonvf10/vetagenda:${var.image_tag}"
+      image_url = "docker.io/simonvf10/vetagenda"
+      tag       = var.image_tag
     }
   }
 
