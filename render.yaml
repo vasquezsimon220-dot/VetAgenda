@@ -6,7 +6,6 @@ services:
     region: oregon
 
     image:
-      url: docker.io/simonvf10/vetagenda
-      tag: latest
+      url: docker.io/simonvf10/vetagenda:latest
 
     healthCheckPath: /
