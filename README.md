@@ -381,6 +381,11 @@ Durante la implementación se logró:
 
 ---
 
+## Proceso DevOps
+
+El proyecto utiliza GitHub Actions para la integración continua, Docker para la contenerización y Render para el despliegue de la aplicación.
+
+
 # 14. Conclusiones
 
 El proyecto permitió implementar un flujo DevOps completo para una aplicación web, integrando control de versiones, integración continua, contenedores, infraestructura como código y despliegue continuo.
