@@ -304,6 +304,61 @@ VetAgenda/
 ├── render.yaml
 └── README.md
 
+# 12. Diagrama del PIPELINE
+
+
+                 ┌─────────────────────┐
+                 │       GitHub        │
+                 │ Push / Pull Request │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │   GitHub Actions    │
+                 │        CI/CD        │
+                 └──────────┬──────────┘
+                            │
+              ┌─────────────┴─────────────┐
+              ▼                           ▼
+        ┌───────────┐               ┌───────────┐
+        │  Flake8   │               │  Pytest   │
+        └─────┬─────┘               └─────┬─────┘
+              │                           │
+              └─────────────┬─────────────┘
+                            ▼
+                    ┌───────────────┐
+                    │ Docker Build  │
+                    └───────┬───────┘
+                            ▼
+                    ┌───────────────┐
+                    │  Docker Hub   │
+                    └───────┬───────┘
+                            │
+                       Solo main
+                            ▼
+                    ┌───────────────┐
+                    │ Deploy Hook   │
+                    └───────┬───────┘
+                            ▼
+                    ┌───────────────┐
+                    │    Render     │
+                    └───────────────┘
+
+
+Triggers:
+
+Push a ramas de trabajo.
+Pull Request hacia main.
+Push a main para ejecutar el despliegue.
+
+Condiciones de falla:
+
+Si Flake8 falla → pipeline falla.
+Si Pytest falla → pipeline falla.
+Si Docker build falla → pipeline falla.
+Si publicación Docker falla → pipeline falla.
+Si el Deploy Hook falla → debemos mejorar el comando a curl -f para que GitHub detecte correctamente el error.
+
 
 
 
