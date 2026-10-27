@@ -1,395 +1,300 @@
-#  VetAgenda
+# VetAgenda
 
 Sistema web para la gestión de horas y citas veterinarias, desarrollado como proyecto académico para demostrar la implementación de prácticas DevOps, integración continua, contenedores, infraestructura como código y despliegue continuo en la nube.
-
----
 
 ## 1. Descripción del proyecto
 
 VetAgenda es una aplicación web orientada a la gestión de horas veterinarias.
 
-El proyecto fue desarrollado para aplicar un flujo DevOps completo, incorporando control de versiones, integración continua (CI), construcción y publicación de imágenes Docker, infraestructura como código (IaC) y despliegue continuo (CD).
+El proyecto aplica un flujo DevOps que integra control de versiones, integración continua (CI), construcción y publicación de imágenes Docker, configuración de infraestructura como código (IaC) y despliegue continuo (CD).
 
 ### Usuarios principales
 
-* Dueños de mascotas.
-* Veterinarios.
-* Administradores de la plataforma.
+- Dueños de mascotas.
+- Veterinarios.
+- Administradores de la plataforma.
 
 ### Alcance actual
 
-La versión desarrollada para la evaluación implementa una aplicación web básica que permite validar el funcionamiento del entorno DevOps y del proceso de despliegue.
-
-La aplicación actualmente muestra el estado de funcionamiento de VetAgenda y sirve como base para futuras funcionalidades de gestión de usuarios, mascotas y horas veterinarias.
+La versión desarrollada para la evaluación corresponde a una aplicación web básica que permite comprobar el funcionamiento del entorno DevOps y del proceso de despliegue.
 
----
+Actualmente, la aplicación muestra un mensaje de funcionamiento y sirve como base para futuras funcionalidades de gestión de usuarios, mascotas y horas veterinarias.
 
-# 2. Requisitos técnicos
+## 2. Requisitos técnicos
 
-| Elemento             | Tecnología                       |
-| -------------------- | -------------------------------- |
-| Lenguaje             | Python 3.12                      |
-| Framework            | Flask                            |
-| Pruebas              | Pytest                           |
-| Análisis de código   | Flake8                           |
-| Contenedores         | Docker                           |
-| Registro de imágenes | Docker Hub                       |
-| Control de versiones | Git + GitHub                     |
-| CI/CD                | GitHub Actions                   |
-| Cloud                | Render                           |
-| IaC                  | Render Blueprint (`render.yaml`) |
-| Puerto de aplicación | 5000                             |
+| Elemento | Tecnología o configuración |
+|---|---|
+| Lenguaje | Python 3.12 |
+| Framework | Flask |
+| Pruebas automatizadas | Pytest |
+| Análisis de código | Flake8 |
+| Contenedores | Docker |
+| Orquestación local | Docker Compose |
+| Registro de imágenes | Docker Hub |
+| Control de versiones | Git y GitHub |
+| Integración y despliegue continuo | GitHub Actions |
+| Proveedor Cloud | Render |
+| Infraestructura como código | Render Blueprint (`render.yaml`) |
+| Puerto de la aplicación | 5000 |
 
----
+## 3. Arquitectura del proyecto
 
-# 3. Arquitectura
+La arquitectura de VetAgenda integra el repositorio de GitHub con los workflows de GitHub Actions, la construcción de imágenes Docker, la publicación en Docker Hub y el despliegue en Render.
 
-El flujo general del proyecto es:
+El flujo general es:
 
-                    ┌─────────────────┐
-                    │     GitHub      │
-                    │  Código + Git   │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ GitHub Actions  │
-                    │       CI        │
-                    └────────┬────────┘
-                             │
-                 ┌───────────┴───────────┐
-                 ▼                       ▼
-          ┌─────────────┐         ┌─────────────┐
-          │   Flake8    │         │   Pytest    │
-          └─────────────┘         └─────────────┘
-                 │                       │
-                 └───────────┬───────────┘
-                             ▼
-                    ┌─────────────────┐
-                    │      Docker     │
-                    │ Build + Image   │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   Docker Hub    │
-                    │ simonvf10/...   │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ Deploy Hook     │
-                    │     Render      │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │ VetAgenda Cloud │
-                    │     Render      │
-                    └─────────────────┘
+1. El código fuente se administra mediante Git y GitHub.
+2. GitHub Actions ejecuta las validaciones de calidad y las pruebas automatizadas.
+3. El pipeline construye la imagen Docker utilizando el `Dockerfile`.
+4. Cuando corresponde, la imagen se publica en Docker Hub.
+5. El workflow solicita el despliegue mediante el Deploy Hook de Render.
+6. Render utiliza la imagen publicada para ejecutar la aplicación web.
 
+Docker Compose complementa esta arquitectura al permitir definir la construcción y ejecución del servicio en un entorno de desarrollo local.
 
+## 4. Control de versiones y estrategia de ramas
 
-# 4. Control de versiones
+El proyecto utiliza Git y GitHub para administrar el código fuente, registrar los cambios y facilitar el trabajo mediante ramas independientes.
 
-El proyecto utiliza Git y GitHub para administrar el código fuente y el trabajo colaborativo.
+Se adopta una estrategia basada en GitHub Flow, adaptada al contexto académico del proyecto. La rama `main` representa la línea principal de desarrollo y los cambios se integran mediante Pull Requests.
 
-Se utilizaron ramas de trabajo independientes para implementar las diferentes etapas del proyecto.
+### Ramas de trabajo
 
-### Ramas principales utilizadas
+Entre las ramas utilizadas durante el desarrollo se encuentran:
 
-* main: rama principal y protegida.
-* feature/backend: implementación inicial de la aplicación y configuración del backend.
-* feature/cloud-terraform: configuración inicial de infraestructura y despliegue.
-* feature/cd-render: implementación del despliegue continuo hacia Render.
-* feature/cd-v2: demostración de una segunda versión de la aplicación.
+- `main`: rama principal del proyecto.
+- `feature/backend`: implementación inicial de la aplicación y configuración del backend.
+- `feature/cloud-terraform`: trabajo relacionado con infraestructura y despliegue.
+- `feature/cd-render`: implementación del despliegue continuo hacia Render.
+- `feature/cd-v2`: trabajo relacionado con la segunda versión de la aplicación.
 
-La rama main cuenta con protección y requiere una revisión/aprobación mediante Pull Request antes de realizar un merge.
+También se pueden utilizar ramas específicas para documentación, correcciones de workflows y nuevas configuraciones, según la tarea desarrollada.
 
-### Commits
+### Convención de nombres
 
-Se utilizaron mensajes descriptivos para identificar los cambios realizados, por ejemplo:
+Para las funcionalidades se utiliza el prefijo `feature/`, seguido de una descripción breve de la tarea. Esta convención facilita identificar el propósito de cada rama.
 
+### Pull Requests
 
-feat: actualiza version de VetAgenda
+Los cambios se envían mediante Pull Requests antes de integrarse en `main`. Este mecanismo permite revisar las modificaciones y comprobar los resultados de los workflows antes de fusionar los cambios.
 
+La rama principal cuenta con reglas de protección y revisión configuradas para el proyecto.
 
+## 5. Convención de commits
 
+Los mensajes de commit se utilizan para identificar de forma clara el propósito de cada modificación.
 
-# 5. Integración Continua (CI)
+Se recomienda utilizar mensajes breves que describan el cambio realizado, por ejemplo:
 
-La integración continua se implementó mediante GitHub Actions.
+- `feat: actualiza version de VetAgenda`
+- `docs: actualiza documentacion del proyecto`
+- `fix: corrige configuracion del workflow`
+- `test: agrega validacion de Docker Compose`
 
-El workflow se encuentra versionado en:
+Estos ejemplos representan una convención recomendada para organizar los cambios. El historial real del repositorio debe revisarse para determinar en qué medida los commits existentes siguen esta estructura.
 
-.github/workflows/ci.yml
+## 6. Integración continua (CI)
 
+La integración continua se implementa mediante GitHub Actions. El workflow principal se encuentra en:
 
-El pipeline realiza las siguientes tareas:
+`.github/workflows/ci.yml`
 
-1. Descarga del código.
-2. Configuración de Python 3.12.
-3. Instalación de dependencias.
-4. Ejecución de Flake8.
-5. Ejecución de pruebas con Pytest.
-6. Inicio de sesión en Docker Hub.
-7. Construcción de la imagen Docker.
-8. Publicación de la imagen en Docker Hub.
+El proceso incluye las siguientes etapas:
 
-El pipeline se ejecuta ante cambios en las ramas de trabajo y Pull Requests hacia `main`.
+1. Descargar el código fuente.
+2. Configurar Python 3.12.
+3. Instalar las dependencias declaradas en `requirements.txt`.
+4. Ejecutar Flake8 para revisar la calidad del código.
+5. Ejecutar las pruebas automatizadas mediante Pytest.
+6. Construir la imagen Docker.
+7. Autenticarse en Docker Hub y publicar la imagen cuando se cumplen las condiciones del workflow.
 
-### Validaciones
+Las validaciones de calidad y las pruebas automatizadas permiten detectar errores antes de integrar los cambios o publicar una nueva imagen.
 
-El pipeline impide continuar correctamente cuando fallan las validaciones de código o las pruebas automatizadas.
+Si falla una etapa que utiliza comandos con control de errores, como Flake8, Pytest o la construcción de Docker, el workflow puede finalizar con error y evitar que se ejecuten los pasos posteriores dependientes de ella.
 
+## 7. Construcción y publicación de imágenes Docker
 
-# 6. Contenedores
+El archivo `Dockerfile` define cómo se construye la imagen de VetAgenda.
 
-VetAgenda utiliza Docker para empaquetar la aplicación junto con sus dependencias.
+La imagen utiliza `python:3.12-slim` como base, establece el directorio de trabajo `/app`, instala las dependencias de Python, copia el código de la aplicación y expone el puerto 5000.
 
-El archivo utilizado es:
+La aplicación se inicia mediante el comando configurado en el Dockerfile.
 
+Las imágenes se publican en Docker Hub bajo el repositorio:
 
-Dockerfile
+`docker.io/simonvf10/vetagenda`
 
+### Etiquetas de las imágenes
 
-La imagen se construye utilizando Python 3.12 y expone el puerto:
-5000
+El pipeline utiliza las etiquetas `latest` y el SHA del commit.
 
+- `latest`: identifica la imagen publicada más recientemente con esa etiqueta.
+- SHA del commit: permite identificar una imagen asociada a un cambio específico del repositorio.
 
-La imagen se publica en Docker Hub con los siguientes tags:
+El uso del SHA facilita la trazabilidad entre el código fuente y la imagen construida. La etiqueta `latest` es mutable y puede apuntar a una imagen diferente después de una nueva publicación.
 
+## 8. Infraestructura como código (IaC)
 
-latest
-<commit SHA>
+La configuración del servicio de Render se declara en el archivo:
 
+`render.yaml`
 
-Esto permite identificar tanto la versión actual como una versión específica asociada a un commit.
+Este archivo permite versionar la configuración del servicio junto con el código fuente.
 
----
+La configuración documentada para VetAgenda contempla:
 
-# 7. Infraestructura como Código (IaC)
+- Tipo de servicio: Web.
+- Nombre del servicio: `vetagenda`.
+- Runtime: imagen Docker.
+- Plan: Free.
+- Región: Oregon.
+- Imagen: `docker.io/simonvf10/vetagenda:latest`.
 
-Para declarar la configuración del servicio en Render se utiliza:
+El archivo funciona como declaración de configuración de infraestructura para Render. El aprovisionamiento efectivo depende de que el servicio se cree o actualice mediante el mecanismo de Render correspondiente, como un Blueprint.
 
-render.yaml
+La configuración final debe mantener coherencia entre la imagen publicada, el servicio desplegado y la ruta de comprobación de salud, si esta se encuentra definida.
 
+## 9. Despliegue en la nube
 
-La configuración define:
+El proveedor Cloud utilizado es Render, que permite ejecutar la aplicación como un servicio web a partir de una imagen Docker.
 
-* Tipo de servicio: Web.
-* Nombre: `vetagenda`.
-* Runtime: imagen Docker.
-* Plan: Free.
-* Región: Oregon.
-* Imagen utilizada: `simonvf10/vetagenda:latest`.
-* Ruta de health check: `/`.
+La aplicación se publica mediante el servicio `vetagenda`, y Render proporciona una URL pública para acceder a ella.
 
-El archivo permite mantener la configuración de infraestructura versionada junto al código fuente.
+La configuración del servicio se mantiene en `render.yaml`, mientras que la automatización del despliegue se integra con GitHub Actions y Docker Hub.
 
+## 10. Despliegue continuo (CD)
 
-# 8. Cloud
+El despliegue continuo se implementa mediante GitHub Actions y el Deploy Hook de Render.
 
-El proveedor Cloud seleccionado es **Render**.
+El workflow principal contiene un paso que solicita el despliegue después de la construcción y publicación de la imagen, bajo las condiciones configuradas para la rama principal.
 
-Render fue seleccionado porque permite desplegar la aplicación Dockerizada en la nube mediante un servicio web, facilitando la implementación del proceso de despliegue continuo.
+El flujo general es:
 
-La aplicación desplegada puede ser accedida desde Internet mediante la URL pública proporcionada por Render.
+1. Se realiza un cambio en el repositorio.
+2. GitHub Actions ejecuta las validaciones y las pruebas.
+3. Se construye la imagen Docker.
+4. Se publica la imagen en Docker Hub.
+5. Si el evento cumple la condición configurada para `main`, se invoca el Deploy Hook de Render.
+6. Render procesa el despliegue del servicio.
 
----
+El workflow utiliza el secreto `RENDER_DEPLOY_HOOK` para realizar la solicitud. La respuesta del Deploy Hook confirma la recepción de la solicitud, mientras que el estado final del despliegue debe comprobarse en Render.
 
-# 9. Despliegue Continuo (CD)
+## 11. Gestión de secretos y seguridad
 
-El despliegue continuo se implementó mediante GitHub Actions y un Deploy Hook de Render.
+El proyecto utiliza GitHub Repository Secrets para proteger credenciales y datos sensibles requeridos por los workflows.
 
-Después de realizar un merge hacia main, GitHub Actions:
+Entre los secretos configurados se encuentran:
 
-1. Ejecuta nuevamente las validaciones.
-2. Construye la imagen Docker.
-3. Publica la nueva imagen en Docker Hub.
-4. Ejecuta el Deploy Hook de Render.
-5. Render despliega la nueva versión de la aplicación.
+- `DOCKERHUB_USERNAME`: nombre de usuario de Docker Hub.
+- `DOCKERHUB_TOKEN`: token utilizado para autenticarse en Docker Hub.
+- `RENDER_DEPLOY_HOOK`: dirección del Deploy Hook de Render.
+- `RENDER_API_KEY`: credencial para autenticarse ante la API de Render cuando un workflow lo requiere.
 
-El workflow utiliza el secreto:
+Los workflows deben utilizar los secretos únicamente en los pasos que necesitan esas credenciales. Sus valores no deben incluirse directamente en el código fuente ni en la documentación.
 
-RENDER_DEPLOY_HOOK
+La existencia de un secreto en GitHub no implica que todos los workflows lo utilicen; su uso efectivo depende de las referencias presentes en cada archivo de configuración.
 
+## 12. Versiones sucesivas de la aplicación
 
-El secreto se almacena en GitHub Actions Secrets y no se encuentra dentro del código fuente.
-
----
-
-# 10. Seguridad
-
-Las credenciales utilizadas para acceder a Docker Hub y Render no se almacenan directamente en el repositorio.
-
-Se utilizan GitHub Repository Secrets para proteger información sensible, incluyendo:
-
-DOCKERHUB_USERNAME
-DOCKERHUB_TOKEN
-RENDER_DEPLOY_HOOK
-
-
-De esta manera, las credenciales no forman parte del código versionado.
-
----
-
-# 11. Demostración del despliegue continuo
-
-Para comprobar el funcionamiento del CD se realizaron dos versiones sucesivas.
+Durante el desarrollo se trabajó con dos versiones sucesivas de VetAgenda para demostrar el flujo de publicación y despliegue.
 
 ### Versión 1
 
-La aplicación mostraba:
+La aplicación mostraba el mensaje:
 
-VetAgenda funcionando correctamente
-
-Esta versión fue construida, publicada en Docker Hub y desplegada en Render.
+`VetAgenda funcionando correctamente`
 
 ### Versión 2
 
-Posteriormente se realizó un cambio controlado en la aplicación:
+Se realizó un cambio controlado en el mensaje mostrado por la aplicación:
 
-VetAgenda funcionando correctamente - v2
+`VetAgenda funcionando correctamente - v2`
 
-El cambio fue enviado mediante Pull Request hacia main.
+El cambio se incorporó al repositorio mediante el flujo de trabajo basado en ramas y Pull Requests.
 
-Después de la aprobación y merge:
+La justificación técnica de esta prueba consiste en comprobar que una modificación en el código puede generar una nueva imagen Docker y activar el proceso de despliegue configurado.
 
+Para demostrar el resultado deben conservarse evidencias del cambio en el código, de las imágenes o etiquetas publicadas y del despliegue correspondiente en Render. La confirmación de dos versiones sucesivas requiere respaldar ambos despliegues con evidencias verificables.
 
-GitHub
-   ↓
-GitHub Actions
-   ↓
-Docker Build
-   ↓
-Docker Hub
-   ↓
-Deploy Hook
-   ↓
-Render
+## 13. Estructura del repositorio
 
+La estructura del proyecto organiza la aplicación, las pruebas automatizadas y los archivos de configuración DevOps.
 
-La nueva versión fue desplegada correctamente y comprobada directamente en el servicio Cloud.
-
-Esto permitió verificar el funcionamiento del proceso de despliegue continuo entre dos versiones sucesivas.
-
----
-
-# 12. Estructura del proyecto
-
-
+```text
 VetAgenda/
-│
 ├── app/
 │   ├── __init__.py
 │   └── app.py
-│
 ├── tests/
 │   └── test_app.py
-│
-├── docker/
-│
-├── terraform/
-│   ├── main.tf
-│   └── variables.tf
-│
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml
-│       └── terraform.yml
-│
+│       ├── terraform.yml
+│       └── compose-test.yml
+├── docker/
+├── terraform/
+│   ├── main.tf
+│   └── variables.tf
 ├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 ├── render.yaml
+├── .gitignore
 └── README.md
+```
 
-# 12. Diagrama del PIPELINE
+La estructura debe mantenerse sincronizada con los archivos realmente presentes en la rama principal del repositorio.
 
+### Descripción de los componentes
 
-                 ┌─────────────────────┐
-                 │       GitHub        │
-                 │ Push / Pull Request │
-                 └──────────┬──────────┘
-                            │
-                            ▼
-                 ┌─────────────────────┐
-                 │   GitHub Actions    │
-                 │        CI/CD        │
-                 └──────────┬──────────┘
-                            │
-              ┌─────────────┴─────────────┐
-              ▼                           ▼
-        ┌───────────┐               ┌───────────┐
-        │  Flake8   │               │  Pytest   │
-        └─────┬─────┘               └─────┬─────┘
-              │                           │
-              └─────────────┬─────────────┘
-                            ▼
-                    ┌───────────────┐
-                    │ Docker Build  │
-                    └───────┬───────┘
-                            ▼
-                    ┌───────────────┐
-                    │  Docker Hub   │
-                    └───────┬───────┘
-                            │
-                       Solo main
-                            ▼
-                    ┌───────────────┐
-                    │ Deploy Hook   │
-                    └───────┬───────┘
-                            ▼
-                    ┌───────────────┐
-                    │    Render     │
-                    └───────────────┘
+- `app/`: contiene el código de la aplicación Flask.
+- `tests/`: contiene las pruebas automatizadas.
+- `.github/workflows/`: almacena los workflows de integración, infraestructura y validación de Docker Compose.
+- `docker/`: directorio destinado a archivos relacionados con Docker, si corresponde a la configuración actual.
+- `terraform/`: contiene archivos de infraestructura como código.
+- `Dockerfile`: define la construcción de la imagen Docker.
+- `docker-compose.yml`: define el servicio utilizado para ejecutar la aplicación mediante Docker Compose.
+- `requirements.txt`: declara las dependencias de Python.
+- `render.yaml`: contiene la configuración declarativa del servicio de Render.
+- `.gitignore`: excluye archivos locales y generados que no deben incluirse en el control de versiones.
+- `README.md`: documenta el proyecto y su arquitectura.
 
+## 14. Orquestación con Docker Compose
 
-Triggers:
+Se incorporó el archivo `docker-compose.yml` para facilitar la construcción y ejecución del servicio VetAgenda mediante Docker Compose.
 
-Push a ramas de trabajo.
-Pull Request hacia main.
-Push a main para ejecutar el despliegue.
+La configuración utiliza el `Dockerfile` existente, define el servicio `vetagenda` y establece la correspondencia entre el puerto 5000 del contenedor y el puerto 5000 del entorno anfitrión.
 
-Condiciones de falla:
+Además, se incorporó el workflow `Docker Compose Test` en GitHub Actions. Este workflow valida la configuración, construye la imagen e intenta iniciar el servicio en un entorno de ejecución automatizado.
 
-Si Flake8 falla → pipeline falla.
-Si Pytest falla → pipeline falla.
-Si Docker build falla → pipeline falla.
-Si publicación Docker falla → pipeline falla.
-Si el Deploy Hook falla → debemos mejorar el comando a curl -f para que GitHub detecte correctamente el error.
+Esta integración permite comprobar la configuración de Docker Compose sin requerir una instalación local de Docker en el equipo del desarrollador. El resultado del workflow debe conservarse como evidencia de la validación automatizada.
 
+## 15. Resultados obtenidos
 
+Durante el desarrollo de VetAgenda se trabajó en los siguientes aspectos:
 
+- Control de versiones mediante Git y GitHub.
+- Organización del trabajo mediante ramas y Pull Requests.
+- Integración continua mediante GitHub Actions.
+- Análisis de código mediante Flake8.
+- Pruebas automatizadas mediante Pytest.
+- Construcción de imágenes Docker.
+- Publicación de imágenes en Docker Hub.
+- Configuración declarativa del servicio de Render.
+- Despliegue automatizado mediante el Deploy Hook.
+- Gestión de credenciales mediante GitHub Repository Secrets.
+- Incorporación de Docker Compose y validación automatizada de su configuración.
 
-# 13. Resultados obtenidos
+Los resultados deben acompañarse con evidencias del repositorio, los workflows, Docker Hub y Render, según corresponda a cada actividad.
 
-Durante la implementación se logró:
+## 16. Conclusiones
 
-* Implementar control de versiones mediante Git y GitHub.
-* Configurar ramas de trabajo y protección de `main`.
-* Implementar Pull Requests con revisión.
-* Crear un pipeline de integración continua.
-* Ejecutar análisis de código mediante Flake8.
-* Ejecutar pruebas automatizadas mediante Pytest.
-* Crear imágenes Docker.
-* Publicar imágenes en Docker Hub.
-* Declarar la configuración Cloud mediante `render.yaml`.
-* Desplegar VetAgenda en Render.
-* Automatizar el despliegue mediante GitHub Actions.
-* Probar dos versiones sucesivas de la aplicación mediante CD.
+El proyecto VetAgenda permitió aplicar prácticas DevOps a una aplicación web desarrollada con Python y Flask, integrando control de versiones, validaciones automatizadas, contenerización, publicación de imágenes e implementación del despliegue en la nube.
 
----
+GitHub Actions permite automatizar etapas del proceso y detectar errores durante las validaciones. Docker facilita empaquetar la aplicación y sus dependencias, mientras que Docker Hub proporciona un registro para almacenar las imágenes construidas.
 
-## Proceso DevOps
+La configuración declarativa de Render permite mantener la definición del servicio versionada. Por su parte, Docker Compose facilita definir y validar la ejecución del servicio en un entorno automatizado.
 
-El proyecto utiliza GitHub Actions para la integración continua, Docker para la contenerización y Render para el despliegue de la aplicación.
-
-
-# 14. Conclusiones
-
-El proyecto permitió implementar un flujo DevOps completo para una aplicación web, integrando control de versiones, integración continua, contenedores, infraestructura como código y despliegue continuo.
-
-La automatización permitió reducir la intervención manual necesaria para publicar nuevas versiones, además de incorporar validaciones automáticas antes del despliegue.
-
-La demostración de dos versiones sucesivas confirmó que una modificación realizada en el código puede atravesar el proceso de CI, generar una nueva imagen Docker y finalmente ser desplegada automáticamente en un entorno Cloud mediante Render.
+En conjunto, estas herramientas contribuyen a mejorar la trazabilidad de los cambios, la reproducibilidad del entorno y la automatización del proceso de entrega de VetAgenda. La verificación de cada despliegue y de las versiones publicadas debe respaldarse mediante las evidencias correspondientes.
