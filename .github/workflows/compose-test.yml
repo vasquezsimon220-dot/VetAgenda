@@ -1,0 +1,38 @@
+
+name: Docker Compose Test
+
+on:
+  push:
+    branches:
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  compose-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Validar Docker Compose
+        run: docker compose -f docker-compose.yml config
+
+      - name: Construir imagen
+        run: docker compose -f docker-compose.yml build
+
+      - name: Iniciar servicio
+        run: docker compose -f docker-compose.yml up -d
+
+      - name: Comprobar contenedor
+        run: docker compose -f docker-compose.yml ps
+
+      - name: Revisar registros
+        if: always()
+        run: docker compose -f docker-compose.yml logs
+
+      - name: Detener servicio
+        if: always()
+        run: docker compose -f docker-compose.yml down
