@@ -49,3 +49,7 @@ jobs:
       - name: Validar configuracion Terraform
         working-directory: infraestructura-aws
         run: terraform validate
+
+      - name: Ejecutar pruebas automatizadas
+        working-directory: infraestructura-aws
+        run: terraform test
