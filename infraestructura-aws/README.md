@@ -1,0 +1,73 @@
+# Infraestructura AWS - VetAgenda
+
+## 1. Descripción del proyecto
+
+Este directorio contiene la configuración de infraestructura como código (IaC) para el proyecto VetAgenda, utilizando Terraform y servicios de Amazon Web Services (AWS).
+
+El objetivo es preparar una infraestructura que permita implementar medidas de seguridad, monitoreo, registro de eventos y validaciones automatizadas.
+
+## 2. Tecnologías utilizadas
+
+- **Terraform:** herramienta para definir y administrar infraestructura como código.
+- **AWS IAM:** administración de roles y permisos.
+- **Amazon CloudWatch:** monitoreo y almacenamiento de registros.
+- **AWS CloudTrail:** auditoría de eventos y actividades de la cuenta AWS.
+- **Amazon S3:** almacenamiento de registros de auditoría.
+- **GitHub Actions:** automatización de validaciones y pruebas.
+
+## 3. Estructura de archivos
+
+| Archivo | Descripción |
+|---|---|
+| `main.tf` | Define la versión requerida de Terraform y el proveedor AWS. |
+| `provider.tf` | Configura el proveedor AWS, la región y las etiquetas predeterminadas. |
+| `variables.tf` | Define las variables del proyecto, región y entorno. |
+| `outputs.tf` | Expone información general de la configuración. |
+| `security.tf` | Define el rol IAM, sus permisos y el perfil para EC2. |
+| `monitoring.tf` | Configura el grupo de registros y una alarma de uso de CPU en CloudWatch. |
+| `cloudtrail.tf` | Configura el almacenamiento privado en S3 y la auditoría mediante CloudTrail. |
+| `tests.tf` | Incorpora validaciones de los parámetros de configuración. |
+| `infrastructure.tftest.hcl` | Contiene las pruebas automatizadas de Terraform. |
+
+## 4. Seguridad
+
+Se implementa un rol IAM destinado a las instancias EC2 de VetAgenda.
+
+Este rol contempla permisos limitados para enviar registros a CloudWatch y publicar métricas, aplicando el principio de mínimo privilegio.
+
+Además, se configura un bucket S3 con bloqueo de acceso público y cifrado para almacenar los registros de auditoría de CloudTrail.
+
+## 5. Monitoreo y auditoría
+
+Se utiliza Amazon CloudWatch para:
+
+- Crear un grupo de registros para VetAgenda.
+- Configurar una alarma que detecte un uso promedio de CPU superior al 80%.
+- Establecer una retención de registros de 7 días.
+
+Por otro lado, AWS CloudTrail permite registrar eventos de administración para facilitar la auditoría de actividades realizadas en la cuenta AWS.
+
+## 6. Automatización y pruebas
+
+Se utiliza GitHub Actions para ejecutar automáticamente las siguientes validaciones cuando se realizan cambios en los archivos de infraestructura:
+
+1. Descarga del repositorio.
+2. Configuración de Terraform.
+3. Verificación del formato mediante `terraform fmt`.
+4. Inicialización mediante `terraform init`.
+5. Validación mediante `terraform validate`.
+6. Ejecución de pruebas automatizadas mediante `terraform test`.
+
+Las pruebas utilizan un proveedor AWS simulado (*mock provider*), por lo que permiten comprobar la configuración sin necesitar una conexión real con AWS.
+
+## 7. Estado actual del proyecto
+
+La configuración de Terraform y las pruebas automatizadas se encuentran preparadas y validadas mediante GitHub Actions.
+
+**Pendiente:**
+- Conectar el proyecto con AWS Academy.
+- Desplegar los recursos mediante Terraform.
+- Verificar el funcionamiento de IAM, CloudWatch y CloudTrail.
+- Completar la configuración de monitoreo y registros para los recursos que se desplieguen.
+
+**Importante:** hasta completar el despliegue, los recursos descritos corresponden a configuraciones definidas en Terraform y no necesariamente a servicios activos en AWS.
