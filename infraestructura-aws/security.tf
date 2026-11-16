@@ -1,6 +1,4 @@
 
-# Identificar la cuenta AWS actual
-data "aws_caller_identity" "current" {}
 
 # Rol IAM para la instancia EC2 de VetAgenda
 
