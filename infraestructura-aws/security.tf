@@ -1,5 +1,4 @@
 
-
 # Rol IAM para la instancia EC2 de VetAgenda
 
 data "aws_iam_policy_document" "ec2_assume_role" {
@@ -41,7 +40,7 @@ data "aws_iam_policy_document" "cloudwatch_permissions" {
     ]
   }
 
-  # Consultar flujos de registros
+  # Consultar los flujos de registros
   statement {
     effect = "Allow"
 
@@ -49,9 +48,7 @@ data "aws_iam_policy_document" "cloudwatch_permissions" {
       "logs:DescribeLogStreams"
     ]
 
-    resources = [
-      "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/ec2/${var.project_name}:*"
-    ]
+    resources = ["*"]
   }
 
   # Publicar métricas personalizadas
