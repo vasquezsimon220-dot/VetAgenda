@@ -73,7 +73,7 @@ resource "aws_instance" "vetagenda" {
             "collect_list": [
               {
                 "file_path": "/var/log/syslog",
-                "log_group_name": "/aws/ec2/vetagenda",
+                "log_group_name": "/aws/ec2/${var.project_name}",
                 "log_stream_name": "{instance_id}-syslog"
               }
             ]
