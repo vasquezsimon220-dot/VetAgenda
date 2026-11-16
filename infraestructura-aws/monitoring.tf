@@ -27,6 +27,10 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
 
   treat_missing_data = "notBreaching"
 
+  dimensions = {
+    InstanceId = aws_instance.vetagenda.id
+  }
+
   tags = {
     Project = var.project_name
   }
