@@ -2,6 +2,12 @@
 
 mock_provider "aws" {
 
+  mock_data "aws_iam_policy_document" {
+    defaults = {
+      json = "{\"Version\":\"2012-10-17\",\"Statement\":[]}"
+    }
+  }
+
   mock_data "aws_caller_identity" {
     defaults = {
       account_id = "123456789012"
@@ -66,7 +72,7 @@ run "default_configuration" {
     error_message = "La alarma de CPU debe tener un umbral del 80 por ciento."
   }
 
-  # Validar auditoria CloudTrail
+  # Validar auditoría CloudTrail
 
   assert {
     condition     = aws_cloudtrail.vetagenda.enable_logging == true
