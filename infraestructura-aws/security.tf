@@ -1,9 +1,9 @@
+
 # Rol IAM para la instancia EC2 de VetAgenda
 
 data "aws_iam_policy_document" "ec2_assume_role" {
   statement {
-    effect = "Allow"
-
+    effect  = "Allow"
     actions = ["sts:AssumeRole"]
 
     principals {
@@ -22,9 +22,11 @@ resource "aws_iam_role" "vetagenda_ec2_role" {
   }
 }
 
-# Permisos limitados para enviar registros y metricas
+# Permisos limitados para CloudWatch
 
 data "aws_iam_policy_document" "cloudwatch_permissions" {
+
+  # Crear flujos y enviar registros
   statement {
     effect = "Allow"
 
@@ -34,10 +36,22 @@ data "aws_iam_policy_document" "cloudwatch_permissions" {
     ]
 
     resources = [
-      "arn:aws:logs:${var.aws_region}:*:log-group:/aws/ec2/${var.project_name}:log-stream:*"
+      "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/ec2/${var.project_name}:log-stream:*"
     ]
   }
 
+  # Consultar los flujos de registros
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "logs:DescribeLogStreams"
+    ]
+
+    resources = ["*"]
+  }
+
+  # Publicar métricas personalizadas
   statement {
     effect = "Allow"
 
@@ -54,6 +68,8 @@ data "aws_iam_policy_document" "cloudwatch_permissions" {
     }
   }
 }
+
+# Política asociada al rol IAM
 
 resource "aws_iam_role_policy" "cloudwatch_policy" {
   name   = "${var.project_name}-cloudwatch-policy"

@@ -1,4 +1,3 @@
-
 # Grupo de registros para VetAgenda
 
 resource "aws_cloudwatch_log_group" "vetagenda_logs" {
@@ -16,7 +15,6 @@ resource "aws_cloudwatch_log_group" "vetagenda_logs" {
 resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   alarm_name          = "${var.project_name}-high-cpu"
   alarm_description   = "Detecta uso elevado de CPU en VetAgenda"
-
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
@@ -26,6 +24,10 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu" {
   threshold           = 80
 
   treat_missing_data = "notBreaching"
+
+  dimensions = {
+    InstanceId = aws_instance.vetagenda.id
+  }
 
   tags = {
     Project = var.project_name

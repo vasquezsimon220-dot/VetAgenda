@@ -1,4 +1,3 @@
-
 name: Terraform AWS VetAgenda
 
 on:
@@ -7,6 +6,7 @@ on:
   push:
     branches:
       - feature/aws-infrastructure
+      - main
     paths:
       - 'infraestructura-aws/**'
       - '.github/workflows/terraform-aws.yml'
@@ -18,14 +18,13 @@ on:
       - 'infraestructura-aws/**'
       - '.github/workflows/terraform-aws.yml'
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     name: Validate AWS Infrastructure
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        shell: bash
 
     steps:
       - name: Descargar codigo
@@ -33,10 +32,8 @@ jobs:
 
       - name: Configurar Terraform
         uses: hashicorp/setup-terraform@v3
-
-      - name: Formatear archivos Terraform
-        working-directory: infraestructura-aws
-        run: terraform fmt -recursive
+        with:
+          terraform_version: 1.7.5
 
       - name: Comprobar formato Terraform
         working-directory: infraestructura-aws
