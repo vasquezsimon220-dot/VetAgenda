@@ -59,6 +59,11 @@ run "default_configuration" {
     error_message = "El disco de EC2 debe tener 8 GB."
   }
 
+  assert {
+    condition     = aws_instance.vetagenda.root_block_device[0].encrypted == true
+    error_message = "El disco de EC2 debe estar cifrado."
+  }
+
   # Validar monitoreo CloudWatch
 
   assert {
@@ -82,5 +87,21 @@ run "default_configuration" {
     condition     = aws_cloudtrail.vetagenda.include_global_service_events == true
     error_message = "CloudTrail debe registrar eventos globales."
   }
-}
 
+  assert {
+    condition     = aws_cloudtrail.vetagenda.enable_log_file_validation == true
+    error_message = "CloudTrail debe tener habilitada la validacion de archivos."
+  }
+
+  # Validar seguridad IAM
+
+  assert {
+    condition     = aws_iam_role.vetagenda_ec2_role.name == "vetagenda-ec2-role"
+    error_message = "El rol IAM de EC2 debe tener el nombre esperado."
+  }
+
+  assert {
+    condition     = aws_iam_instance_profile.vetagenda_profile.role == aws_iam_role.vetagenda_ec2_role.name
+    error_message = "El perfil de instancia debe estar asociado al rol IAM."
+  }
+}
