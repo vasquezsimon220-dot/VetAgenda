@@ -39,8 +39,8 @@ run "default_configuration" {
   }
 
   assert {
-    condition     = output.aws_region == "us-east-1"
-    error_message = "La region debe ser us-east-1."
+    condition     = output.aws_region == "us-east-2"
+    error_message = "La region debe ser us-east-2 (Ohio)."
   }
 
   # Validar instancia EC2
