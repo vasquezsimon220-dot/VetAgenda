@@ -28,6 +28,11 @@ resource "aws_instance" "vetagenda" {
   instance_type        = "t3.micro"
   iam_instance_profile = aws_iam_instance_profile.vetagenda_profile.name
 
+  # Grupo de seguridad personalizado
+  vpc_security_group_ids = [
+    aws_security_group.vetagenda_web.id
+  ]
+
   root_block_device {
     volume_size           = 8
     volume_type           = "gp3"
@@ -37,23 +42,32 @@ resource "aws_instance" "vetagenda" {
 
   monitoring = false
 
-  # Instalar y configurar CloudWatch Agent
+  # Instalar Nginx y CloudWatch Agent
   user_data = <<-EOF
     #!/bin/bash
     set -e
 
     apt-get update
-    apt-get install -y wget
+    apt-get install -y nginx wget
 
-    wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+    # Iniciar servidor web
+    systemctl enable nginx
+    systemctl start nginx
 
-    dpkg -i -E ./amazon-cloudwatch-agent.deb
+    # Publicar página VetAgenda
+    echo '${base64encode(file("${path.module}/../web/index.html"))}' | base64 -d > /var/www/html/index.html
 
+    # Descargar CloudWatch Agent
+    wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazoncloudwatch-agent.deb
+
+    dpkg -i -E ./amazoncloudwatch-agent.deb
+
+    # Configurar monitoreo
     cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<'CONFIG'
     {
       "agent": {
         "metrics_collection_interval": 300,
-        "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log"
+        "logfile": "/opt/aws/amazoncloudwatch-agent/logs/amazon-cloudwatch-agent.log"
       },
       "metrics": {
         "namespace": "VetAgenda",
@@ -96,3 +110,4 @@ resource "aws_instance" "vetagenda" {
     Environment = var.environment
   }
 }
+
