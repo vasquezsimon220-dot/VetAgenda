@@ -52,7 +52,7 @@ resource "aws_instance" "vetagenda" {
     cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<'CONFIG'
     {
       "agent": {
-        "metrics_collection_interval": 60,
+        "metrics_collection_interval": 300,
         "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log"
       },
       "metrics": {
