@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VetAgenda | Gestión Veterinaria</title>
+<style>
+:root {
+  --green: #16866c;
+  --dark: #173d36;
+  --light: #f3f8f6;
+  --muted: #82938d;
+  --white: #ffffff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--light);
+  color: var(--dark);
+}
+header {
+  background: white;
+  padding: 20px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e8efec;
+}
+.logo { font-size: 24px; font-weight: 800; color: var(--green); }
+.logo span { color: var(--dark); }
+nav a {
+  text-decoration: none;
+  color: #64756f;
+  margin-left: 25px;
+  font-size: 14px;
+}
+nav a:hover { color: var(--green); }
+main { max-width: 1200px; margin: 40px auto; padding: 0 25px; }
+.welcome {
+  background: linear-gradient(120deg, #176f5b, #2ba889);
+  color: white;
+  padding: 38px;
+  border-radius: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.welcome h1 { font-size: 32px; margin: 0 0 12px; }
+.welcome p { color: #e0f4ed; margin: 0; }
+.welcome .paw { font-size: 75px; }
+.section-title {
+  margin: 35px 0 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.section-title h2 { font-size: 20px; margin: 0; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.card {
+  background: white;
+  padding: 23px;
+  border-radius: 17px;
+  box-shadow: 0 5px 20px #173d3609;
+}
+.stat { font-size: 30px; font-weight: bold; margin: 12px 0 5px; }
+.muted { color: var(--muted); font-size: 13px; }
+.stat-icon { font-size: 25px; }
+.content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+}
+.appointment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #edf1ef;
+  gap: 10px;
+}
+.appointment:last-child { border: 0; }
+.pet { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 43px; height: 43px;
+  border-radius: 14px;
+  background: #e2f4ed;
+  display: grid; place-items: center;
+  font-size: 23px;
+}
+.pet strong { display: block; font-size: 14px; margin-bottom: 5px; }
+.tag {
+  background: #e5f5ee;
+  color: #16866c;
+  padding: 7px 11px;
+  border-radius: 20px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.pet-card { text-align: center; }
+.pet-card .animal { font-size: 45px; margin: 10px; }
+button {
+  border: 0;
+  background: var(--green);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+button:hover { background: #106c56; }
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 35px;
+  font-size: 12px;
+}
+@media(max-width: 750px) {
+  header { padding: 18px; }
+  nav { display: none; }
+  main { margin-top: 22px; padding: 0 15px; }
+  .welcome { padding: 25px; }
+  .welcome h1 { font-size: 24px; }
+  .welcome .paw { font-size: 48px; }
+  .cards, .content { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🐾 Vet<span>Agenda</span></div>
+  <nav>
+    <a href="#inicio">Inicio</a>
+    <a href="#agenda">Agenda</a>
+    <a href="#mascotas">Mascotas</a>
+  </nav>
+  <button onclick="alert('¡Bienvenido a VetAgenda!')">Ingresar</button>
+</header>
+
+<main>
+  <section class="welcome" id="inicio">
+    <div>
+      <h1>¡Bienvenido a VetAgenda!</h1>
+      <p>Organiza tus consultas y cuida a quienes hacen tu vida especial.</p>
+    </div>
+    <div class="paw">🐶</div>
+  </section>
+
+  <div class="section-title">
+    <h2>Resumen general</h2>
+    <span class="muted">Panel de demostración</span>
+  </div>
+
+  <section class="cards">
+    <div class="card">
+      <div class="stat-icon">🐾</div>
+      <div class="stat">128</div>
+      <div class="muted">Mascotas registradas</div>
+    </div>
+    <div class="card">
+      <div class="stat-icon">📅</div>
+      <div class="stat">16</div>
+      <div class="muted">Citas programadas</div>
+    </div>
+    <div class="card">
+      <div class="stat-icon">🩺</div>
+      <div class="stat">8</div>
+      <div class="muted">Atenciones realizadas</div>
+    </div>
+  </section>
+
+  <div class="section-title" id="agenda">
+    <h2>Próximas consultas</h2>
+    <span class="muted">Agenda de hoy</span>
+  </div>
+
+  <section class="content">
+    <div class="card">
+      <div class="appointment">
+        <div class="pet">
+          <div class="avatar">🐶</div>
+          <div><strong>Max</strong><span class="muted">Control general · 09:00</span></div>
+        </div>
+        <span class="tag">Confirmada</span>
+      </div>
+      <div class="appointment">
+        <div class="pet">
+          <div class="avatar">🐱</div>
+          <div><strong>Luna</strong><span class="muted">Vacunación · 10:30</span></div>
+        </div>
+        <span class="tag">Confirmada</span>
+      </div>
+      <div class="appointment">
+        <div class="pet">
+          <div class="avatar">🐰</div>
+          <div><strong>Copito</strong><span class="muted">Revisión · 12:00</span></div>
+        </div>
+        <span class="tag">Pendiente</span>
+      </div>
+    </div>
+
+    <div class="card pet-card" id="mascotas">
+      <h2>Mascota destacada</h2>
+      <div class="animal">🐕</div>
+      <h3>Max</h3>
+      <p class="muted">Golden Retriever · 3 años</p>
+      <button onclick="alert('Ficha de demostración de Max')">
+        Ver ficha
+      </button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2026 VetAgenda · Gestión veterinaria inteligente 🐾
+  <br><br>
+  Proyecto académico · Entorno de demostración
+</footer>
+
+</body>
+</html>
+
